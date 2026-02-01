@@ -1,0 +1,70 @@
+YAML	AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Create a t2.micro EC2 instance (Project-WP) using Ubuntu AMI with key 
+
+Parameters:
+  KeyPairName:
+    Type: String
+    Default: ProjectKey
+    Description: EC2 KeyPair name to use or create if missing.
+
+  DefaultVpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: Select the default VPC where the instance will be created.
+
+Resources:
+  # Create a key pair named ProjectKey (if it doesn’t exist)
+  ProjectKey:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: !Ref KeyPairName
+      KeyType: rsa
+
+  # Create a security group named Project-securityGroup in the default VPC
+  ProjectSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: Project-securityGroup
+      GroupDescription: Allow all inbound traffic
+      VpcId: !Ref DefaultVpcId
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  # Create EC2 instance
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-0ecb62995f68bb549
+      KeyName: !Ref KeyPairName
+      SecurityGroupIds:
+        - !Ref ProjectSecurityGroup
+      Tags:
+        - Key: Name
+          Value: Server1
+      # ------------------------------------------------------------------
+      # MODIFICATION: Add BlockDeviceMappings to set the root volume size
+      # ------------------------------------------------------------------
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda  # Standard root device name for Amazon Linux
+          Ebs:
+            VolumeSize: 16       # Set the size to 16 GiB
+            VolumeType: gp3      # Using gp3 is a modern, cost-effective best practice
+            DeleteOnTermination: true
+      # ------------------------------------------------------------------
+
+Outputs:
+  InstanceId:
+    Description: Instance ID
+    Value: !Ref EC2Instance
+  PublicIP:
+    Description: Public IP address of EC2 instance
+    Value: !GetAtt EC2Instance.PublicIp
+  KeyPairUsed:
+    Description: Key pair used or created
+    Value: !Ref KeyPairName
+  SecurityGroupUsed:
+    Description: Security group used or created
+    Value: !Ref ProjectSecurityGroup
+
