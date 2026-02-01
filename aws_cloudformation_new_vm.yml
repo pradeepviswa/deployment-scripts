@@ -1,6 +1,6 @@
-YAML	AWSTemplateFormatVersion: '2010-09-09'
-Description: >
-  Create a t2.micro EC2 instance (Project-WP) using Ubuntu AMI with key 
+AWSTemplateFormatVersion: '2010-09-09'
+Description: |
+  Create a t3.micro EC2 instance (Project-WP) using Ubuntu AMI with key
 
 Parameters:
   KeyPairName:
@@ -47,10 +47,10 @@ Resources:
       # MODIFICATION: Add BlockDeviceMappings to set the root volume size
       # ------------------------------------------------------------------
       BlockDeviceMappings:
-        - DeviceName: /dev/xvda  # Standard root device name for Amazon Linux
+        - DeviceName: /dev/xvda # Standard root device name for Amazon Linux
           Ebs:
-            VolumeSize: 16       # Set the size to 16 GiB
-            VolumeType: gp3      # Using gp3 is a modern, cost-effective best practice
+            VolumeSize: 16 # Set the size to 16 GiB
+            VolumeType: gp3 # Using gp3 is a modern, cost-effective best practice
             DeleteOnTermination: true
       # ------------------------------------------------------------------
 
@@ -67,4 +67,3 @@ Outputs:
   SecurityGroupUsed:
     Description: Security group used or created
     Value: !Ref ProjectSecurityGroup
-
