@@ -1,7 +1,10 @@
-sudo su 
+sudo su
+
+export DEBIAN_FRONTEND=noninteractive
+
 apt update -y
-apt-get install -y software-properties-common
-apt-add-repository ppa:ansible/ansible
-apt-get update
-apt-get install -y ansible
-ansibole --version
+apt install -y software-properties-common
+apt-add-repository -y ppa:ansible/ansible
+apt update -y
+apt install -y ansible
+ansible --version
