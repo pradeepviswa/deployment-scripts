@@ -20,6 +20,7 @@ echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
 # 5️⃣ Update apt and install Jenkins
 sudo apt update
 sudo apt install jenkins
+sudo apt install -y maven
 
 # 6️⃣ Start & enable Jenkins
 sudo systemctl enable jenkins
